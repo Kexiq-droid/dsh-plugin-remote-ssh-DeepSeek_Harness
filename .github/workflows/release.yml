@@ -1,0 +1,46 @@
+name: Build & Release DSH Plugin (.tgz)
+
+on:
+  push:
+    branches: [ "main" ]
+    tags: [ "v*" ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-pack:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies (no native postinstall)
+        run: npm install --ignore-scripts
+
+      - name: Run Automated Tests
+        run: npm test
+
+      - name: Build Bundle & Pack .tgz
+        run: npm run pack:plugin
+
+      - name: Upload .tgz Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: dsh-plugin-remote-ssh-tgz
+          path: "*.tgz"
+
+      - name: Publish to GitHub Releases
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: v1.0.0
+          name: "Remote SSH Plugin v1.0.0 (DeepSeek Harness 0.2.0-rc.2)"
+          files: "*.tgz"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
