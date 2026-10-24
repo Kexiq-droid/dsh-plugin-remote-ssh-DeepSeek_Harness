@@ -1,5 +1,19 @@
 import { defineConfig } from 'tsup';
 
+const stubNativeAddonsPlugin = {
+  name: 'stub-native-ssh-addons',
+  setup(build: any) {
+    build.onResolve({ filter: /^(cpu-features|.*sshcrypto\.node)$/ }, (args: any) => ({
+      path: args.path,
+      namespace: 'native-stub'
+    }));
+    build.onLoad({ filter: /.*/, namespace: 'native-stub' }, () => ({
+      contents: 'throw new Error("Native addon disabled: using pure Node.js crypto fallback");',
+      loader: 'js'
+    }));
+  }
+};
+
 export default defineConfig([
   {
     entry: { host: 'src/host/index.ts' },
@@ -7,8 +21,9 @@ export default defineConfig([
     target: 'node18',
     platform: 'node',
     bundle: true,
-    noExternal: ['ssh2', 'ssh-config'],
-    external: ['electron', 'cpu-features', '@cordisjs/core'],
+    noExternal: ['ssh2', 'ssh-config', 'asn1', 'safer-buffer', 'bcrypt-pbkdf', 'tweetnacl'],
+    external: ['electron', '@cordisjs/core'],
+    esbuildPlugins: [stubNativeAddonsPlugin],
     clean: true,
     sourcemap: true,
     dts: false

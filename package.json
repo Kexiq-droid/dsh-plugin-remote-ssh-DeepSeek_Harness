@@ -1,6 +1,6 @@
 {
   "name": "dsh-plugin-remote-ssh",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Cursor-like Remote SSH plugin for DeepSeek Harness Desktop (0.2.0-rc.2)",
   "repository": {
     "type": "git",
@@ -20,7 +20,7 @@
   "dsh": {
     "id": "remote-ssh",
     "displayName": "Remote SSH (Cursor Style)",
-    "version": "1.0.0",
+    "version": "1.0.1",
     "engines": {
       "dsh": ">=0.2.0-rc.0 <0.3.0"
     },
@@ -51,18 +51,14 @@
     "test": "vitest run",
     "pack:plugin": "npm run build && npm pack"
   },
-  "dependencies": {
-    "ssh-config": "^4.4.0",
-    "ssh2": "^1.15.0"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/ssh2": "^1.15.0",
+    "ssh-config": "^4.4.0",
+    "ssh2": "^1.15.0",
     "tsup": "^8.0.2",
     "typescript": "^5.4.0",
     "vitest": "^1.4.0"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": []
   }
 }
